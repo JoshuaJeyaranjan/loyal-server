@@ -40,7 +40,7 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-app.use("/products", authenticateToken, productsRoutes);
+app.use("/products", productsRoutes);
 app.use("/signup", usersRoutes);
 
 app.listen(port, () => {
