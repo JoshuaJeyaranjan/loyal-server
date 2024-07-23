@@ -1,26 +1,29 @@
-const express = require('express');
-const router = express.Router();
+const router = require("express").Router();
+const knex = require('../knexfile');
+const db = require('knex')(knex.development);
 
-// Get all products
-router.get('/', async (req, res) => {
+// Public route to get all products
+router.get("/", async (req, res) => {
   try {
-    const products = await req.db('products').select('*');
+    const products = await db("products").select("*");
     res.json(products);
   } catch (error) {
-    res.status(500).json({ message: 'Error retrieving products' });
+    res.status(500).send("Error fetching products");
   }
 });
 
-// Get a single product by ID
-router.get('/:id', async (req, res) => {
+// Public route to get a single product by ID
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
   try {
-    const product = await req.db('products').where({ id: req.params.id }).first();
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+    const product = await db("products").where({ id }).first();
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).send("Product not found");
     }
-    res.json(product);
   } catch (error) {
-    res.status(500).json({ message: 'Error retrieving product' });
+    res.status(500).send("Error fetching product");
   }
 });
 
