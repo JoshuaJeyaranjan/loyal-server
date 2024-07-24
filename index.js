@@ -39,6 +39,9 @@ const authenticateToken = (req, res, next) => {
     next();
   });
 };
+const checkoutRoutes = require('./routes/checkoutRoutes');
+app.use('/checkout', checkoutRoutes);
+
 
 app.use("/products", productsRoutes);
 app.use("/signup", usersRoutes);
