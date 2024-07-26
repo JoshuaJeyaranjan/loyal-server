@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const knex = require('../knexfile');
 const db = require('knex')(knex.development);
-const JWT_SECRET = 'your_jwt_secret'; // Use an environment variable in production
+const JWT_SECRET = process.env.JWT_SECRET; // Use an environment variable in production
 
 router
   .get("/", (req, res) => {
@@ -11,7 +11,6 @@ router
   })
 
   .post("/", async (req, res) => {
-    console.log(req.body);
     const newUser = {
       name: req.body.username,
       password: await bcrypt.hash(req.body.password, 10), // Hash the password
@@ -33,7 +32,16 @@ router
     try {
       const user = await db("users").where({ email }).first();
       if (user && await bcrypt.compare(password, user.password)) {
-        const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+        // Add admin status to the token payload
+        const token = jwt.sign(
+          {
+            id: user.id,
+            email: user.email,
+            admin: user.admin_status // Include admin status in the payload
+          },
+          JWT_SECRET,
+          { expiresIn: '1h' }
+        );
         res.status(200).json({ token });
       } else {
         res.status(401).send("Invalid email or password");
