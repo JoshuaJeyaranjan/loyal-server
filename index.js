@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const JWT_SECRET = 'your_jwt_secret'; // Use an environment variable in production
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret'; // Use the environment variable in production
 
 // Initialize Knex
 const db = knex(knexConfig.development);
@@ -14,6 +14,8 @@ const db = knex(knexConfig.development);
 // Import routes
 const productsRoutes = require("./routes/productsRoutes");
 const usersRoutes = require("./routes/usersRoutes");
+const checkoutRoutes = require('./routes/checkoutRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 app.use(cors());
 app.use(express.json());
@@ -39,12 +41,11 @@ const authenticateToken = (req, res, next) => {
     next();
   });
 };
-const checkoutRoutes = require('./routes/checkoutRoutes');
+
 app.use('/checkout', checkoutRoutes);
-
-
 app.use("/products", productsRoutes);
 app.use("/signup", usersRoutes);
+app.use("/admin", adminRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
