@@ -23,7 +23,8 @@ exports.seed = function(knex) {
             regular_price: 49.99, 
             sale_price: 39.99,
             default_image: 'https://example.com/images/hoodie.jpg',
-            category: 'Hoodies'
+            category: 'Hoodies',
+            bestseller: true,
           },
           { 
             name: 'Graphic T-Shirt', 
@@ -32,6 +33,7 @@ exports.seed = function(knex) {
             regular_price: 19.99, 
             sale_price: 14.99,
             default_image: 'https://example.com/images/tshirt.jpg',
+            bestseller: true,
             category: 'T-Shirts'
           },
           { 
@@ -41,6 +43,7 @@ exports.seed = function(knex) {
             regular_price: 5.99, 
             sale_price: 5.99,
             default_image: 'https://example.com/images/sticker.jpg',
+            bestseller: true,
             category: 'Stickers'
           },
           { 
@@ -50,6 +53,7 @@ exports.seed = function(knex) {
             regular_price: 29.99, 
             sale_price: 24.99,
             default_image: 'https://example.com/images/banner.jpg',
+            bestseller: true,
             category: 'Banners'
           },
           { 
