@@ -8,7 +8,24 @@ router.get("/", async (req, res) => {
     const products = await db("products").select("*");
     res.json(products);
   } catch (error) {
+    console.error(error);
     res.status(500).send("Error fetching products");
+  }
+});
+
+// Public route to get bestsellers
+router.get("/bestsellers", async (req, res) => {
+  try {
+    const bestsellers = await db("products").where("bestseller", true).select("*");
+
+    if (bestsellers.length > 0) {
+      res.json(bestsellers);
+    } else {
+      res.status(404).send("No bestsellers found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error fetching bestsellers");
   }
 });
 
@@ -23,6 +40,7 @@ router.get("/:id", async (req, res) => {
       res.status(404).send("Product not found");
     }
   } catch (error) {
+    console.error(error);
     res.status(500).send("Error fetching product");
   }
 });

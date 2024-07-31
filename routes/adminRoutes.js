@@ -5,7 +5,7 @@ const knex = require('../db'); // Make sure this is correctly configured
 
 // Add inventory item
 router.post('/inventory', async (req, res) => {
-  const { name, description, regularPrice, salePrice } = req.body;
+  const { name, description, regularPrice, salePrice, bestseller } = req.body;
 
   if (!name || !description || !regularPrice) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -15,6 +15,7 @@ router.post('/inventory', async (req, res) => {
     await knex('products').insert({
       name,
       description,
+      bestseller: bestseller ? 1 : 0,
       regular_price: regularPrice,
       sale_price: salePrice || regularPrice, // Default to regularPrice if salePrice is not provided
       created_at: new Date(),
@@ -31,7 +32,7 @@ router.post('/inventory', async (req, res) => {
 // Update inventory item
 router.put('/inventory/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, description, regularPrice, salePrice } = req.body;
+  const { name, description, regularPrice, salePrice, bestseller } = req.body;
 
   try {
     const result = await knex('products')
@@ -39,6 +40,7 @@ router.put('/inventory/:id', async (req, res) => {
       .update({
         name,
         description,
+        bestseller: bestseller ? 1 : 0,
         regular_price: regularPrice,
         sale_price: salePrice || regularPrice,
         updated_at: new Date(),
