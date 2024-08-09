@@ -16,6 +16,7 @@ const productsRoutes = require("./routes/productsRoutes");
 const usersRoutes = require("./routes/usersRoutes");
 const checkoutRoutes = require('./routes/checkoutRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const collectionsRoutes = require('./routes/collectionsRoutes')
 
 app.use(cors());
 app.use(express.json());
@@ -46,6 +47,7 @@ app.use('/checkout', checkoutRoutes);
 app.use("/products", productsRoutes);
 app.use("/signup", usersRoutes);
 app.use("/admin", adminRoutes);
+app.use('/collections', collectionsRoutes)
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
