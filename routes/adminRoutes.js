@@ -3,6 +3,43 @@ const router = express.Router();
 
 const knex = require('../db'); // Make sure this is correctly configured
 
+// Create a new collection
+router.post('/collections', async (req, res) => {
+  const { name, description, default_image } = req.body;
+  try {
+      const [collectionId] = await req.db('collections').insert({
+          name,
+          description,
+          default_image,
+      }).returning('id');
+
+      res.status(201).json({ message: 'Collection created', collectionId });
+  } catch (error) {
+      res.status(500).json({ message: 'Error creating collection', error });
+  }
+});
+
+// Assign products to a collection
+router.post('/collections/:id/products', async (req, res) => {
+  const { id } = req.params; // Collection ID
+  const { productIds } = req.body; // Array of product IDs
+
+  try {
+      const assignments = productIds.map(productId => ({
+          product_id: productId,
+          collection_id: id,
+      }));
+
+      await knex('product_collections').insert(assignments);
+
+      res.status(201).json({ message: 'Products assigned to collection' });
+  } catch (error) {
+      res.status(500).json({ message: 'Error assigning products to collection', error });
+  }
+});
+
+
+
 // Add inventory item
 router.post('/inventory', async (req, res) => {
   const { name, description, regularPrice, salePrice, bestseller } = req.body;
