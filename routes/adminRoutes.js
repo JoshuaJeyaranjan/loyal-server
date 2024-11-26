@@ -123,6 +123,27 @@ router.get('/users', async (req, res) => {
   }
 });
 
+router.put('/collections/:id', async (req,res) => {
+const {id} = req.params;
+const {name, description} = req.body;
+
+  try {
+    const result = await knex('collections')
+    .where({id})
+    .update({name, description})
+
+    if (result) {
+      res.status(200).json({ message: 'Collection updated successfully' });
+    } else {
+      res.status(404).json({ error: 'Collection not found' });
+    }
+    
+  } catch (error) {
+    console.error('Error updating collection:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
+
 router.get('/collections/:id/images', async (req, res) => {
   try {
     
