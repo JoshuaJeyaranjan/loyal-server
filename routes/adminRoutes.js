@@ -123,4 +123,29 @@ router.get('/users', async (req, res) => {
   }
 });
 
+router.get('/collections/:id/images', async (req, res) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+});
+
+router.post('/collections/:id/images', async (req, res) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+});
+
+router.delete('/collections/images/:imageId', async (req, res) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+})
+
+
 module.exports = router;
