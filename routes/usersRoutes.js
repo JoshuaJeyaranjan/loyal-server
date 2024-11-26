@@ -1,9 +1,19 @@
 const router = require("express").Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const knex = require('../knexfile');
-const db = require('knex')(knex.development);
+const jwt = require("jsonwebtoken");
+const knex = require("../knexfile");
+const db = require("knex")(knex.development);
+const crypto = require("crypto"); // Use crypto for hashing
 const JWT_SECRET = process.env.JWT_SECRET; // Use an environment variable in production
+
+// Helper function to hash passwords
+const hashPassword = (password) => {
+  return crypto.createHash("sha256").update(password).digest("hex");
+};
+
+// Helper function to compare passwords
+const isPasswordMatch = (password, hashedPassword) => {
+  return hashPassword(password) === hashedPassword;
+};
 
 router
   .get("/", (req, res) => {
@@ -13,7 +23,7 @@ router
   .post("/", async (req, res) => {
     const newUser = {
       name: req.body.username,
-      password: await bcrypt.hash(req.body.password, 10), // Hash the password
+      password: hashPassword(req.body.password), // Hash the password
       email: req.body.email,
       email_notifications: req.body.email_notifications,
     };
@@ -31,20 +41,22 @@ router
     const { email, password } = req.body;
     try {
       const user = await db("users").where({ email }).first();
-      if (user && await bcrypt.compare(password, user.password)) {
+      if (user && isPasswordMatch(password, user.password)) {
         // Add admin status to the token payload
         const token = jwt.sign(
           {
             id: user.id,
             email: user.email,
-            admin: user.admin_status // Include admin status in the payload
+            admin: user.is_admin, // Include admin status in the payload
           },
           JWT_SECRET,
-          { expiresIn: '1h' }
+          { expiresIn: "1h" }
         );
         res.status(200).json({ token });
+
       } else {
-        res.status(401).send("Invalid email or password");
+        res.status(401).send("Invalid email or password")
+
       }
     } catch (error) {
       console.error("Error logging in:", error); // Log the actual error
