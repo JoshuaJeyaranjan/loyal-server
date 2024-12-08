@@ -4,7 +4,9 @@ const knexConfig = require("./knexfile");
 const cors = require("cors");
 const jwt = require('jsonwebtoken');
 const app = express();
+require('dotenv').config();
 const port = process.env.PORT || 3000;
+
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret'; // Use the environment variable in production
 
@@ -18,6 +20,7 @@ const checkoutRoutes = require('./routes/checkoutRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const collectionsRoutes = require('./routes/collectionsRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const awsRoutes = require('./routes/awsRoutes');
 
 app.use(cors());
 app.use(express.json());
@@ -50,6 +53,7 @@ app.use("/signup", usersRoutes);
 app.use("/admin", adminRoutes);
 app.use('/collections', collectionsRoutes);
 app.use('/upload', uploadRoutes);
+app.use('/aws', awsRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
